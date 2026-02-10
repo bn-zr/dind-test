@@ -13,10 +13,16 @@ jobs:
     - uses: actions/checkout@v4
     - name: List test/mongod.cfg
       run: ls ./test/mongod.cfg
+    - name: Prepare directories
+      run: mkdir -p /tmp/db /tmp/log
     - name: Start MongoDB
-      run: docker run -d --name mongo -p 27017:27017 -v $(pwd)/test/mongod.cfg:/etc/mongo/mongod.cfg mongo:latest mongod --config /etc/mongo/mongod.cfg
+      run: docker run -d --name mongo -p 27017:27017 -v $(pwd)/test/mongod.cfg:/etc/mongod.conf mongo:latest mongod --config /etc/mongod.conf
+    - name: Check MongoDB logs
+      run: docker logs mongo
     - name: Wait for MongoDB
       run: sleep 10
+    - name: Check containers
+      run: docker ps -a | grep mongo
     - name: Check MongoDB availability
       run: docker run --rm --link mongo:mongo mongo:latest mongo --host mongo --eval "db.stats()"
     - name: Docker version
