@@ -15,6 +15,8 @@ jobs:
       run: ls ./test/mongod.cfg
     - name: Start MongoDB
       run: docker run -d --name mongo -p 27017:27017 -v $(pwd)/test/mongod.cfg:/etc/mongo/mongod.cfg mongo:latest mongod --config /etc/mongo/mongod.cfg
+    - name: Show running docker containers and networks
+      run: docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Networks}}"
     - name: Wait for MongoDB
       run: sleep 10
     - name: Check MongoDB availability
